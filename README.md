@@ -1,12 +1,34 @@
 # AI Video Editor
 
-Editor de vídeo com IA que roda no navegador: você grava pela webcam, a interface funciona como iluminação, e a IA insere imagens e legendas automaticamente enquanto você fala.
+Editor de vídeo com IA que roda no navegador e **na sua máquina, sem nenhuma API key**. Você grava pela webcam, a própria tela vira iluminação e, ao parar, a IA transcreve, corta pausas e vícios de linguagem, cria legendas animadas, aplica zooms e busca na web as mídias de apoio (notícias, prints, GIFs e imagens) para cada momento da fala.
 
-Este documento reúne **todos os requisitos do projeto** — as regras fixas de produto, o que já está implementado, o que ainda é simulado e **como configurar o backend** para trocar a simulação por um serviço real.
+## Destaques
 
-> Nota sobre o repositório: ele está conectado ao Lovable. As regras de segurança do histórico git ficam em `AGENTS.md`.
+- **Gravação com iluminação por software:** Panel Light e Ring Light com cor, temperatura e intensidade, em 16:9, 9:16 ou 1:1
+- **Transcrição local** com Whisper e tempo por palavra
+- **Plano de edição com Claude** (via Claude Code local): cortes sutis, ênfases, zooms e momentos de b-roll
+- **Mídias reais pesquisadas na web:** manchete e imagem da notícia, print da página pelo Chrome headless, GIF do GIPHY, imagens do Wikimedia
+- **Legendas palavra a palavra** e componentes animados (números, barras, listas, comparações)
+- **Exportação no navegador** (canvas + MediaRecorder) em MP4 ou WebM
+
+```text
+Gravar → Whisper (transcrição) → Claude (plano de edição) → Claude + web (mídias) → linha do tempo → prévia e exportação
+```
+
+## Como rodar
+
+```sh
+npm install
+npm run setup:whisper   # uma vez (precisa de python3.12 e ffmpeg)
+npm run dev             # precisa do Claude Code instalado e logado (`claude`)
+```
 
 ---
+
+# Documentação técnica
+
+O restante deste documento reúne os requisitos do projeto: as regras fixas de produto, o que já está implementado e como configurar um backend gerenciado para publicar o app.
+
 
 ## 1. Visão geral
 
@@ -16,7 +38,7 @@ Este documento reúne **todos os requisitos do projeto** — as regras fixas de 
 | **Público** | Criadores de conteúdo (YouTube, TikTok), marketing e educadores |
 | **Problema** | Editar vídeo consome tempo na busca por imagens de apoio, e gravar pelo computador costuma resultar em vídeo mal iluminado |
 | **Solução** | Iluminação via software (a própria tela) + edição automática por IA (transcrição, busca de imagens, legendas) |
-| **Fase atual** | Protótipo front-end only. A "IA" é simulada no navegador |
+| **Fase atual** | Funcional localmente: IA real com Whisper e Claude Code rodando na máquina |
 | **Plataforma** | Navegador desktop (foco em telas de MacBook) |
 
 ---
@@ -425,3 +447,7 @@ Gravar (navegador)
 | `src/styles.css` | Tokens de cor e de fonte, animação das legendas |
 
 Nada de `src/App.tsx`, `src/pages/` ou `react-router-dom`: este projeto é TanStack Start, e essas convenções não existem aqui.
+
+---
+
+Desenvolvido por **Marcos Pantoja** · [29Tech](https://www.vintenove.com)
